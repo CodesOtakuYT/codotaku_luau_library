@@ -193,12 +193,14 @@ function Slice:fill(value)
 	for i = self.i, self.j or #self.t do
 		self.t[i] = value
 	end
+	return self
 end
 
 function Slice:fill_with(fn, ...)
 	for i = self.i, self.j or #self.t do
 		self.t[i] = fn(...)
 	end
+	return self
 end
 
 -- Conversion method
