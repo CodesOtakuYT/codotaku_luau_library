@@ -1,4 +1,4 @@
---[[
+--[[ LICENCE
 MIT License
 
 Copyright (c) 2023 Codotaku
@@ -21,10 +21,52 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ]]
+
+--[[ API(23)
+Class(1)
+	Slice = {ClassName = 'Slice'}
+Metamethod(1)
+	__len()
+Constructor(1)
+	new(t: table, i: number?, j: number?)
+Copy Constructor(1)
+	clone()
+Getter method(1)
+	at(index: number)
+Self mutating method(3)
+	shrink(length: number)
+	advance(offset: number)
+	sub(offset: number, length: number?)
+Functional method(2)
+	foreach(fn)
+	reduce(fn)
+ Mathematical method(5)
+	sum(fn)
+	product(fn)
+	average(fn)
+	min()
+	max()
+Table mutating method(3)
+	map(fn)
+	fill(value)
+	fill_with(fn)
+Conversion method(4)
+	table(): table
+	string(seperator: string?): string
+	concat(seperator: string?): string
+	unpack()
+]]
+
+--[[ Goals
+	-- Performance before readability
+	-- Using the standard library when possible
+	-- Independent methods as much as reasonable
+]]
+
 -- Class
 local Slice = {ClassName = 'Slice'}
 
--- Metamethods
+-- Metamethod
 
 Slice.__index = Slice
 
@@ -47,32 +89,32 @@ function Slice:clone()
 	return table.clone(self)
 end
 
--- Getter methods
+-- Getter method
 
-function Slice:at(index)
+function Slice:at(index: number)
 	return self.t[index + self.i]
 end
 
--- Self mutating methods
+-- Self mutating method
 
-function Slice:shrink(length)
+function Slice:shrink(length: number)
 	length = length or 1
 	self.j = self.j and self.j - length or #self.t - length
 	return self
 end
 
-function Slice:advance(offset)
+function Slice:advance(offset: number)
 	offset = offset or 1
 	self.i += offset
 	return self
 end
 
-function Slice:sub(offset, length: number?)
+function Slice:sub(offset: number, length: number?)
 	self.i += offset
 	self.j = self.j and self.j - length or #self.t - length
 end
 
--- Functional methods
+-- Functional method
 
 function Slice:foreach(fn)
 	for i = self.i, self.j or #self.t do
@@ -89,7 +131,7 @@ function Slice:reduce(fn)
 	return result
 end
 
--- Mathematical methods
+-- Mathematical method
 
 function Slice:sum(fn)
 	local result = self.t[1]	
@@ -136,7 +178,7 @@ function Slice:max()
 	return result
 end
 
--- Table mutating methods
+-- Table mutating method
 
 function Slice:map(fn)
 	for i = self.i, self.j or #self.t do
@@ -157,15 +199,15 @@ function Slice:fill_with(fn)
 	end
 end
 
--- Conversion methods
+-- Conversion method
 
-function Slice:table()
+function Slice:table(): table
 	local copy = table.create((self.j or #self.t) - self.i + 1)
 	table.move(self.t, self.i, self.j or #self.t, 1, copy)
 	return copy
 end
 
-function Slice:string(seperator: string?)
+function Slice:string(seperator: string?): string
 	local t = table.create((self.j or #self.t) - self.i + 1)
 	for i = self.i, self.j or #self.t do
 		t[i - self.i + 1] = string.char(self.t[i])
@@ -181,5 +223,6 @@ function Slice:unpack()
 	return table.unpack(self.t, self.i, self.j)
 end
 
+-- Return
 
 return Slice
