@@ -63,6 +63,10 @@ Conversion method(4)
 	-- Independent methods as much as reasonable
 ]]
 
+--[[ Inspiration
+	-- Rust standard library (https://doc.rust-lang.org/std/primitive.slice.html)
+]]
+
 -- Class
 local Slice = {ClassName = 'Slice'}
 
