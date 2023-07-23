@@ -89,9 +89,7 @@ function Slice.new(t: table, i: number?, j: number?)
 end
 
 -- Copy Constructor
-function Slice:clone()
-	return table.clone(self)
-end
+Slice.clone = table.clone
 
 -- Getter method
 
