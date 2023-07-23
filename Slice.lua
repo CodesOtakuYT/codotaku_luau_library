@@ -126,7 +126,7 @@ function Slice:foreach(fn)
 end
 
 function Slice:reduce(fn)
-	local result = self.t[1]	
+	local result = self.t[self.i]	
 	for i = self.i + 1, self.j or #self.t do
 		result = fn(result, self.t[i])
 	end
@@ -136,7 +136,7 @@ end
 -- Mathematical method
 
 function Slice:sum(fn)
-	local result = self.t[1]	
+	local result = self.t[self.i]	
 	for i = self.i + 1, self.j or #self.t do
 		result += self.t[i]
 	end
@@ -144,7 +144,7 @@ function Slice:sum(fn)
 end
 
 function Slice:product(fn)
-	local result = self.t[1]	
+	local result = self.t[self.i]	
 	for i = self.i + 1, self.j or #self.t do
 		result *= self.t[i]
 	end
@@ -152,7 +152,7 @@ function Slice:product(fn)
 end
 
 function Slice:average(fn)
-	local result = self.t[1]
+	local result = self.t[self.i]
 	local fin = self.j or #self.t
 	for i = self.i + 1, fin do
 		result += self.t[i]
@@ -161,7 +161,7 @@ function Slice:average(fn)
 end
 
 function Slice:min()
-	local result = self.t[1]
+	local result = self.t[self.i]
 	local fin = self.j or #self.t
 	for i = self.i + 1, fin do
 		local item = self.t[i]
@@ -171,7 +171,7 @@ function Slice:min()
 end
 
 function Slice:max()
-	local result = self.t[1]
+	local result = self.t[self.i]
 	local fin = self.j or #self.t
 	for i = self.i + 1, fin do
 		local item = self.t[i]
