@@ -94,7 +94,7 @@ Slice.clone = table.clone
 -- Getter method
 
 function Slice:at(index: number)
-	return self.t[index + self.i + 1]
+	return self.t[index + self.i - 1]
 end
 
 -- Self mutating method
