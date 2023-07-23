@@ -114,6 +114,7 @@ end
 function Slice:sub(offset: number, length: number?)
 	self.i += offset
 	self.j = self.j and self.j - length or #self.t - length
+	return self
 end
 
 -- Functional method
