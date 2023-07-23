@@ -25,3 +25,4 @@ here split will return all words on the sentence although we're only printing th
 ```lua
 print(split_iterator('hello world, and salam in arabic!').next())
 ```
+More to come...
