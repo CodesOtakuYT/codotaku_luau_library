@@ -38,18 +38,18 @@ Self mutating method(3)
 	advance(offset: number)
 	sub(offset: number, length: number?)
 Functional method(2)
-	foreach(fn)
-	reduce(fn)
+	foreach(fn, ...)
+	reduce(fn, ...)
  Mathematical method(5)
-	sum(fn)
-	product(fn)
-	average(fn)
+	sum()
+	product()
+	average()
 	min()
 	max()
 Table mutating method(3)
-	map(fn)
+	map(fn, ...)
 	fill(value)
-	fill_with(fn)
+	fill_with(fn, ...)
 Conversion method(4)
 	table(): table
 	string(seperator: string?): string
@@ -118,24 +118,24 @@ end
 
 -- Functional method
 
-function Slice:foreach(fn)
+function Slice:foreach(fn, ...)
 	for i = self.i, self.j or #self.t do
-		fn(self.t[i])
+		fn(self.t[i], ...)
 	end
 	return self
 end
 
-function Slice:reduce(fn)
+function Slice:reduce(fn, ...)
 	local result = self.t[self.i]	
 	for i = self.i + 1, self.j or #self.t do
-		result = fn(result, self.t[i])
+		result = fn(result, self.t[i], ...)
 	end
 	return result
 end
 
 -- Mathematical method
 
-function Slice:sum(fn)
+function Slice:sum()
 	local result = self.t[self.i]	
 	for i = self.i + 1, self.j or #self.t do
 		result += self.t[i]
@@ -143,7 +143,7 @@ function Slice:sum(fn)
 	return result
 end
 
-function Slice:product(fn)
+function Slice:product()
 	local result = self.t[self.i]	
 	for i = self.i + 1, self.j or #self.t do
 		result *= self.t[i]
@@ -151,7 +151,7 @@ function Slice:product(fn)
 	return result
 end
 
-function Slice:average(fn)
+function Slice:average()
 	local result = self.t[self.i]
 	local fin = self.j or #self.t
 	for i = self.i + 1, fin do
@@ -182,9 +182,9 @@ end
 
 -- Table mutating method
 
-function Slice:map(fn)
+function Slice:map(fn, ...)
 	for i = self.i, self.j or #self.t do
-		self.t[i] = fn(self.t[i])
+		self.t[i] = fn(self.t[i], ...)
 	end
 	return self
 end
@@ -195,9 +195,9 @@ function Slice:fill(value)
 	end
 end
 
-function Slice:fill_with(fn)
+function Slice:fill_with(fn, ...)
 	for i = self.i, self.j or #self.t do
-		self.t[i] = fn()
+		self.t[i] = fn(...)
 	end
 end
 
