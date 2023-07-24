@@ -55,6 +55,11 @@ Conversion method(4)
 	string(seperator: string?): string
 	concat(seperator: string?): string
 	unpack()
+Iterator method(4)
+	filter(predicate)
+	chunk_exact(chunk_size: number)
+	chunk(chunk_size: number)
+	group_by(classifier)
 ]]
 
 --[[ Goals
@@ -226,6 +231,93 @@ end
 
 function Slice:unpack()
 	return table.unpack(self.t, self.i, self.j)
+end
+
+-- Iterator method
+
+function Slice:filter(predicate)
+	local i, j = self.i - 1, self.j or #self.t
+
+	return function()
+		while true do
+			i += 1
+			if i > j then return end 
+			local item = self.t[i]
+			if predicate(item) then return item end
+		end
+	end
+end
+
+function Slice:chunk_exact(chunk_size: number)
+	local i = self.i - chunk_size
+	local j = self.j or #self.t
+
+	return function()
+		i += chunk_size
+		local fin = i + chunk_size - 1
+		if fin > j then return end
+		return setmetatable({
+			t = self.t,
+			i = i,
+			j = fin,
+		}, Slice)
+	end
+end
+
+function Slice:chunk(chunk_size: number)
+	local i = self.i - chunk_size
+	local j = self.j or #self.t
+	
+	return function()
+		i += chunk_size
+		local fin = i + chunk_size - 1
+		if fin > j then
+			if i > j then return end
+			return setmetatable({
+				t = self.t,
+				i = i,
+				j = j,
+			}, Slice)
+		end
+		return setmetatable({
+			t = self.t,
+			i = i,
+			j = fin,
+		}, Slice)
+	end
+end
+
+function Slice:group_by(classifier)
+	local i = self.i
+	local prev_i = i
+	local prev = classifier(self.t[i])
+	local j = self.j or #self.t
+	
+	return function()
+		while true do
+			i += 1
+			if i > j then return end
+			local current = classifier(self.t[i])
+			if i == j then
+				return current, setmetatable({
+					t = self.t,
+					i = prev_i,
+					j = i,
+				}, Slice)
+			end
+			if prev ~= current then
+				local slice = setmetatable({
+					t = self.t,
+					i = prev_i,
+					j = i - 1,
+				}, Slice)
+				prev_i = i
+				local tmp = prev
+				prev = current
+				return tmp, slice
+			end
+		end
+	end
 end
 
 -- Return
